@@ -63,11 +63,19 @@ function EditCategory({ category, onClose, onSuccess }) {
             onClose();
         } catch (error) {
             console.error("❌ API Error:", error.response ? error.response.data : error.message);
-            Swal.fire("Lỗi!", `Chỉnh sửa thể loại thất bại! Lỗi: ${error.response?.data?.message || error.message}`, "error");
+
+            // Xử lý lỗi trùng tên thể loại
+            if (error.response?.data?.errors?.name) {
+                setErrors(prev => ({
+                    ...prev,
+                    name: "Tên thể loại đã tồn tại, vui lòng chọn tên khác!"
+                }));
+                Swal.fire("Lỗi!", "Tên thể loại đã tồn tại, vui lòng chọn tên khác!", "error");
+            } else {
+                Swal.fire("Lỗi!", `Chỉnh sửa thể loại thất bại! Lỗi: ${error.response?.data?.message || error.message}`, "error");
+            }
         }
     };
-
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ml-60">

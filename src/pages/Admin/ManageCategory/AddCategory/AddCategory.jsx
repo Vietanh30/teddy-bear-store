@@ -43,15 +43,22 @@ function AddCategory({ onClose, onSuccess }) {
                 Swal.fire("Thành công!", "Thể loại mới đã được thêm!", "success");
                 onSuccess();
                 onClose();
-
             }
         } catch (error) {
             console.error("❌ API Error:", error);
-            Swal.fire("Lỗi!", "Thêm thể loại thất bại!", "error");
+
+            // Xử lý lỗi trùng tên thể loại
+            if (error.response?.data?.errors?.name) {
+                setErrors(prev => ({
+                    ...prev,
+                    name: "Tên thể loại đã tồn tại, vui lòng chọn tên khác!"
+                }));
+                Swal.fire("Lỗi!", "Tên thể loại đã tồn tại, vui lòng chọn tên khác!", "error");
+            } else {
+                Swal.fire("Lỗi!", "Thêm thể loại thất bại!", "error");
+            }
         }
     };
-
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ml-60">

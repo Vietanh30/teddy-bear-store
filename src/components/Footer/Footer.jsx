@@ -19,45 +19,33 @@ function Footer() {
 
                             </div>
                             <div className="mt-2 font-semibold uppercase">
-                                Hà Nội | 8:30 - 23:00
+                                Thái Bình | 8:30 - 23:00
                             </div>
                             <div className="mt-2 flex items-start gap-1 ">
                                 <div>
                                     <FontAwesomeIcon icon={faMapMarkerAlt} className="text-sm" />
                                 </div>
                                 <div className='text-sm'>
-                                    114 Cách Mạng Tháng 8, Phường 7, Quận 3, Hồ Chí Minh - 093.828.6616
+                                    Cầu bản, Vũ Lạc, Thành Phố Thái Bình
                                 </div>
-                            </div>
-                            <div className="mt-2 flex items-start gap-1 ">
-                                <div>
-                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-sm" />
-                                </div>
-                                <div className='text-sm'>
-                                    555 Quang Trung, Phường 10, Gò Vấp, Hồ Chí Minh - 037.838.6616
-                                </div>
-                            </div>
-                            <div className="mt-2 flex items-start gap-1 ">
-                                <div>
-                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-sm" />
-                                </div>
-                                <div className='text-sm'>
-                                    114 Cách Mạng Tháng 8, Phường 7, Quận 3, Hồ Chí Minh - 093.828.6616
-                                </div>
-                            </div>
-                            <div className="mt-2 font-semibold uppercase">
-                                Đặt hàng Online: 09.3377.6616
                             </div>
 
                             <div className="mt-2 font-semibold uppercase">
-                                Mua hàng buôn/ sỉ: 03.9797.6616
+                                Đặt hàng Online: 0334275421
+
                             </div>
 
                             <div className="mt-2 font-semibold uppercase">
-                                Hotline phản ánh SP/ DV: 039.333.6616
+                                Mua hàng buôn/ sỉ: 0819598388
+
+                            </div>
+
+                            <div className="mt-2 font-semibold uppercase">
+                                Hotline phản ánh SP/ DV: 0819598388
+
                             </div>
                             <div className='mt-4 text-sm'>
-                                HKD GẤU BÔNG ONLINE <br />
+                                HKD TIỆM NHÀ RABBIT <br />
                                 - Số ĐKKD 01G8018649 do UBND Q. Cầu Giấy cấp ngày 28/07/2012 <br />
                                 - Người đại diện: Nguyễn Phương Hoa
 
@@ -70,14 +58,15 @@ function Footer() {
                             </div>
 
                             <div className='text-sm mt-2'>
-                                + MBBANK
+                                + VPBANK
                             </div>
                             <div className='text-sm mt-2'>
-                                Ngân hàng Quân Đội – Chi nhánh Đường 3 tháng
+                                Ngân hàng Thương mại cổ phần Việt Nam Thịnh Vượng
+
 
                             </div>
                             <div className='text-sm mt-2'>
-                                Chủ TK : Nguyễn Linh Chi Hoa – STK: 80933776616
+                                Chủ TK : DANG THI THU PHUONG– STK: 0334275421
 
                             </div>
                             <div className='text-sm mt-2'>

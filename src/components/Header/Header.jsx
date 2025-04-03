@@ -119,7 +119,7 @@ function Header() {
                 <div className="flex gap-x-3 items-center">
                     <img className="h-12 w-auto" src={Logo} alt="Logo" />
                     <Link to={path.home}>
-                        <div className="text-[24px] text-[#02c4c1] font-black uppercase">Gấu Bông Online</div>
+                        <div className="text-[24px] text-[#02c4c1] font-black uppercase">TIỆM NHÀ RABBIT</div>
                     </Link>
                 </div>
 

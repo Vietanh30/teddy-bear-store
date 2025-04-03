@@ -35,7 +35,7 @@ function Sidebar() {
                         <div className="flex items-center justify-start">
                             <Link to={path.dashboard} className="flex items-center cursor-pointer">
                                 <img className="w-20" src={Logo} alt="Logo" />
-                                <div className="text-[24px] text-white font-black uppercase">Gấu Bông Online</div>
+                                <div className="text-[24px] text-white font-black uppercase">TIỆM NHÀ RABBIT</div>
                             </Link>
                         </div>
                     </div>

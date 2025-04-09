@@ -19,6 +19,7 @@ function AddValueAttribute({ onClose, onSuccess }) {
     const fetchAttributeTypes = async () => {
         try {
             const response = await attributeTypeApi.getListAttributeTypes(access_token);
+            console.log("typeAttribute", response)
             if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
                 setAttributeTypes(response.data.data);
             }

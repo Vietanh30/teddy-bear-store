@@ -289,7 +289,7 @@ function Cart() {
                 ) : (
                     <div className="py-10 flex flex-col items-center">
                         <div className="text-center text-lg text-[#ff6683] mb-4">Giỏ hàng của bạn đang trống!</div>
-                        <Link to={path.shop} className="bg-[#ff6683] rounded-md text-white text-center px-8 py-3 font-bold transition-colors duration-300 hover:bg-[#02c4c1]">
+                        <Link to={path.home} className="bg-[#ff6683] rounded-md text-white text-center px-8 py-3 font-bold transition-colors duration-300 hover:bg-[#02c4c1]">
                             Quay lại cửa hàng
                         </Link>
                     </div>

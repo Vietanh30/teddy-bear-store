@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Sidebar from "../../../components/SideBar/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faEye, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { getAccessTokenFromLS } from "../../../utils/auth";
 import EditProduct from "./EditProduct/EditProduct";
 import AddProduct from "./AddProduct/AddProduct";
@@ -17,10 +17,45 @@ function ManageProduct() {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedVariations, setSelectedVariations] = useState(null);
     const access_token = getAccessTokenFromLS();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
     useEffect(() => {
         fetchProducts();
     }, []);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500); // debounce 500ms
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [searchTerm]);
+    useEffect(() => {
+        if (debouncedSearchTerm.trim() === "") {
+            fetchProducts(); // nếu input rỗng thì load tất cả
+        } else {
+            searchProducts(debouncedSearchTerm);
+        }
+    }, [debouncedSearchTerm]);
+
+    const searchProducts = async (term) => {
+        setLoading(true);
+        try {
+            const response = await productApi.searchProducts({ name: term });
+            if (response.status === 200) {
+                setProducts(response.data || []);
+            } else {
+                setProducts([]);
+            }
+        } catch (error) {
+            console.error("Tìm kiếm thất bại", error);
+            Swal.fire("Lỗi!", "Không thể tìm kiếm sản phẩm", "error");
+            setProducts([]);
+        }
+        setLoading(false);
+    };
 
     const fetchProducts = async () => {
         setLoading(true);
@@ -73,7 +108,20 @@ function ManageProduct() {
                         + Thêm sản phẩm
                     </button>
                 </div>
+                <div className="relative mb-4">
+                    <input
+                        type="text"
+                        placeholder="Tìm sản phẩm..."
+                        className="w-1/3 px-2 py-1 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6683] focus:border-transparent bg-transparent"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
 
+                    />
+                    <FontAwesomeIcon
+                        icon={faSearch}
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    />
+                </div>
                 {loading ? (
                     <p className="text-center text-[#ff6683] text-lg font-semibold">Đang tải danh sách...</p>
                 ) : products.length > 0 ? (

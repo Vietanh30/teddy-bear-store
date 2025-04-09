@@ -5,7 +5,7 @@ const path = {
     login: '/login',
     productDetail: 'products/:productId',
     search: '/search',
-
+    category: '/category/:categoryId',
 
     //! User
     cart: '/cart',

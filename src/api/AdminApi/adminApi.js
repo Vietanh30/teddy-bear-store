@@ -34,6 +34,73 @@ const adminApi = {
     });
   },
 
+  // Mới thêm: Lấy chi tiết của một đơn hàng
+  getOrderDetail: function (access_token, orderId) {
+    return http.get(`${URL_MANAGE_ORDER}/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+
+  // Mới thêm: Cập nhật trạng thái đơn hàng
+  updateOrderStatus: function (access_token, orderId, status, notes = null) {
+    return http.patch(
+      `${URL_MANAGE_ORDER}/${orderId}/status`,
+      { status, notes },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+  },
+
+  // Mới thêm: Cập nhật thông tin đơn hàng
+  updateOrder: function (access_token, orderId, orderData) {
+    return http.put(`${URL_MANAGE_ORDER}/${orderId}`, orderData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+
+  // Mới thêm: Xóa đơn hàng
+  deleteOrder: function (access_token, orderId) {
+    return http.delete(`${URL_MANAGE_ORDER}/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+
+  // Mới thêm: Tìm kiếm đơn hàng với các bộ lọc
+  searchOrders: function (access_token, filters = {}) {
+    // Chuyển đổi filters thành query params
+    const queryParams = new URLSearchParams();
+    if (filters.keyword) queryParams.append("keyword", filters.keyword);
+    if (filters.status) queryParams.append("status", filters.status);
+    if (filters.date_from) queryParams.append("date_from", filters.date_from);
+    if (filters.date_to) queryParams.append("date_to", filters.date_to);
+    if (filters.order_number)
+      queryParams.append("order_number", filters.order_number);
+
+    const url = queryParams.toString()
+      ? `${URL_MANAGE_ORDER}/search?${queryParams.toString()}`
+      : `${URL_MANAGE_ORDER}/search`;
+
+    return http.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+
   // Lấy tất cả đánh giá với tùy chọn lọc
   getReviews: function (access_token, filters = {}) {
     // Chuyển đổi filters thành query params

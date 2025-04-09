@@ -139,7 +139,7 @@ function Navbar() {
                                             </div>
                                         ) : categoryProducts[category.id] && categoryProducts[category.id].length > 0 ? (
                                             categoryProducts[category.id].map((product) => (
-                                                <Link to={`/products/${product.id}`}>
+                                                <Link key={product.id} to={`/products/${product.id}`}>
                                                     <div className="group col-span-1 h-full border rounded-md p-3 text-[#ff6683] hover:bg-[#ff6683]  hover:text-white cursor-pointer">
                                                         <div key={product.id} className="flex gap-3 items-start">
                                                             <div className="w-16 h-16 flex-shrink-0">
@@ -191,16 +191,6 @@ function Navbar() {
                             )}
                         </li>
                     ))}
-
-                    {/* Chuyện nhà gấu */}
-                    <li className="group relative">
-                        <Link
-                            to="/bear-stories"
-                            className="block py-4 hover:bg-white/10 transition-colors duration-300 text-center"
-                        >
-                            Chuyện nhà gấu
-                        </Link>
-                    </li>
                 </ul>
             </div>
         </nav>

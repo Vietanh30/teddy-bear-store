@@ -43,6 +43,14 @@ const attributeValueApi = {
       },
     });
   },
+  // 🔍 Tìm kiếm loại thuộc tính
+  searchAttributeValues: function (keyword) {
+    return http.get(URL_GET_ATTRIBUTE_VALUE, {
+      params: {
+        search: keyword,
+      },
+    });
+  },
 };
 
 export default attributeValueApi;

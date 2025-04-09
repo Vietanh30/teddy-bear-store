@@ -22,6 +22,7 @@ import ProductDetail from './pages/User/ProductDetail/ProductDetail';
 import SearchResults from './pages/SearchResults/SearchResults';
 import HistoryOrder from './pages/User/HistoryOrder/HistoryOrder';
 import CheckPaymentStatus from './pages/User/CheckPaymentStatus/CheckPaymentStatus';
+import ProductByCategory from './pages/User/ProductByCatgory/ProductByCategory';
 
 
 function App() {
@@ -36,7 +37,7 @@ function App() {
             <Route path={path.error} element={<ErrorPage />} />
             <Route path={path.productDetail} element={<ProductDetail />} />
             <Route path={path.search} element={<SearchResults />} />
-
+            <Route path={path.category} element={<ProductByCategory />} />
           </Route>
 
           {/* Customer Routes - Chỉ khách hàng đã đăng nhập */}

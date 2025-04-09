@@ -15,8 +15,9 @@ const attributeTypeApi = {
   },
 
   // 🔹 Lấy danh sách loại thuộc tính
-  getListAttributeTypes: function () {
-    return http.get(URL_GET_ATTRIBUTE_TYPE, {});
+  getListAttributeTypes: function (searchTerm = "") {
+    const params = searchTerm ? { search: searchTerm } : {};
+    return http.get(URL_GET_ATTRIBUTE_TYPE, { params });
   },
 
   // 🔹 Lấy loại thuộc tính theo ID

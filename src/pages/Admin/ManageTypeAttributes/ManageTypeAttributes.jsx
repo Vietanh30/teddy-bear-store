@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Sidebar from "../../../components/SideBar/Sidebar";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
 import AddTypeAttribute from "./AddTypeAttributes/AddTypeAttributes";
 import EditTypeAttribute from "./EditTypeAttributes/EditTypeAttributes";
 import attributeTypeApi from "../../../api/AdminApi/AttributeTypeApi/attributeTypeApi";
@@ -13,16 +13,19 @@ function ManageTypeAttributes() {
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [selectedAttribute, setSelectedAttribute] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debounceTimeout, setDebounceTimeout] = useState(null);
     const access_token = getAccessTokenFromLS();
 
+    // Fetch attributes on initial load
     useEffect(() => {
-        fetchTypeAttributes();
+        fetchTypeAttributes("");
     }, []);
 
-    const fetchTypeAttributes = async () => {
+    const fetchTypeAttributes = async (term = "") => {
         setLoading(true);
         try {
-            const response = await attributeTypeApi.getListAttributeTypes();
+            const response = await attributeTypeApi.getListAttributeTypes(term);
             console.log("🚀 API Response:", response);
 
             if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
@@ -36,6 +39,26 @@ function ManageTypeAttributes() {
             setTypeAttributes([]);
         }
         setLoading(false);
+    };
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+
+        // Clear any existing timeout
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+
+        // Set search term immediately for UI feedback
+        setSearchTerm(value);
+
+        // Create a new timeout for the actual API call
+        const timeout = setTimeout(() => {
+            fetchTypeAttributes(value);
+        }, 300);
+
+        // Save the timeout ID to clear it if needed
+        setDebounceTimeout(timeout);
     };
 
     const handleDeleteAttribute = (id) => {
@@ -55,18 +78,17 @@ function ManageTypeAttributes() {
                 try {
                     await attributeTypeApi.deleteAttributeType(access_token, id);
                     Swal.fire("Đã xóa!", "Loại thuộc tính đã bị xóa.", "success");
-                    fetchTypeAttributes();
+                    fetchTypeAttributes(searchTerm); // Refresh with current search term
                 } catch (error) {
                     Swal.fire("Lỗi!", "Xóa loại thuộc tính thất bại!", "error");
                 }
             }
         });
     };
-
     return (
         <>
             <Sidebar />
-            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-24">
+            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-20">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-[#ff6683]">Quản lý Loại Thuộc Tính</h2>
                     <button
@@ -77,10 +99,27 @@ function ManageTypeAttributes() {
                     </button>
                 </div>
 
+                {/* Search input */}
+                <div className="relative mb-4">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm theo tên hoặc tên hiển thị..."
+                        className="w-1/3 px-2 py-1 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6683] focus:border-transparent"
+                        onChange={handleSearchChange}
+                        defaultValue={searchTerm}
+                    />
+                    <FontAwesomeIcon
+                        icon={faSearch}
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    />
+                </div>
+
                 {loading ? (
                     <p className="text-center text-[#ff6683]">Đang tải danh sách...</p>
                 ) : typeAttributes.length === 0 ? (
-                    <p className="text-center text-[#ff6683]">Không có thuộc tính nào.</p>
+                    <p className="text-center text-[#ff6683]">
+                        {searchTerm ? "Không tìm thấy thuộc tính nào phù hợp với tìm kiếm." : "Không có thuộc tính nào."}
+                    </p>
                 ) : (
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead>
@@ -113,11 +152,15 @@ function ManageTypeAttributes() {
             </div>
 
             {/* Hiển thị modal thêm loại thuộc tính */}
-            {isAdding && <AddTypeAttribute onClose={() => setIsAdding(false)} onSuccess={fetchTypeAttributes} />}
+            {isAdding && <AddTypeAttribute onClose={() => setIsAdding(false)} onSuccess={() => fetchTypeAttributes(searchTerm)} />}
 
             {/* Hiển thị modal chỉnh sửa loại thuộc tính */}
             {selectedAttribute && (
-                <EditTypeAttribute attribute={selectedAttribute} onClose={() => setSelectedAttribute(null)} onSuccess={fetchTypeAttributes} />
+                <EditTypeAttribute
+                    attribute={selectedAttribute}
+                    onClose={() => setSelectedAttribute(null)}
+                    onSuccess={() => fetchTypeAttributes(searchTerm)}
+                />
             )}
         </>
     );

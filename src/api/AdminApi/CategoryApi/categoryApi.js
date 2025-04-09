@@ -16,6 +16,13 @@ const categoryApi = {
   getListCategories: function () {
     return http.get(URL_CATEGORY, {});
   },
+  searchCategories: function (searchTerm = "") {
+    return http.get(
+      `${URL_CATEGORY}?search=${encodeURIComponent(searchTerm)}`,
+      {}
+    );
+  },
+
   getCategoryById: function (idCategory) {
     return http.get(`${URL_CATEGORY}/${idCategory}`, {});
   },

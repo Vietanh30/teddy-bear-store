@@ -8,17 +8,29 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import AddCategory from "./AddCategory/AddCategory";
 import EditCategory from "./EditCategory/EditCategory";
 
-
 function ManageCategory() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const access_token = getAccessTokenFromLS();
 
     useEffect(() => {
         fetchCategories();
     }, []);
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchTerm.trim() === "") {
+                fetchCategories();
+            } else {
+                handleSearch();
+            }
+        }, 500); // debounce delay 500ms
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchTerm]);
 
     const fetchCategories = async () => {
         setLoading(true);
@@ -27,6 +39,17 @@ function ManageCategory() {
             setCategories(response.data);
         } catch (error) {
             Swal.fire("Lỗi!", "Không thể tải thể loại", "error");
+        }
+        setLoading(false);
+    };
+
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const response = await categoryApi.searchCategories(searchTerm);
+            setCategories(response.data);
+        } catch (error) {
+            Swal.fire("Lỗi!", "Không thể tìm kiếm thể loại", "error");
         }
         setLoading(false);
     };
@@ -59,8 +82,8 @@ function ManageCategory() {
     return (
         <>
             <Sidebar />
-            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-24">
-                <div className="flex justify-between items-center mb-4">
+            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-20">
+                <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
                     <h2 className="text-2xl font-bold text-[#ff6683]">Quản lý thể loại</h2>
                     <button
                         className="bg-[#ff6683] text-white px-4 py-2 rounded-md font-bold hover:bg-[#d8576d] transition"
@@ -69,7 +92,15 @@ function ManageCategory() {
                         Thêm thể loại
                     </button>
                 </div>
-
+                <div className="my-3">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm thể loại..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="border px-3 py-1 rounded-md outline-none w-full sm:w-[300px]"
+                    />
+                </div>
                 {loading ? (
                     <p className="text-center text-gray-500">Đang tải thể loại...</p>
                 ) : (
@@ -89,10 +120,16 @@ function ManageCategory() {
                                     <td className="py-2 px-4">{category.name}</td>
                                     <td className="py-2 px-4">{category.description}</td>
                                     <td className="py-2 px-4 flex justify-center space-x-1">
-                                        <button className="px-1 py-1 rounded flex items-center gap-1" onClick={() => setSelectedCategory(category)}>
+                                        <button
+                                            className="px-1 py-1 rounded flex items-center gap-1"
+                                            onClick={() => setSelectedCategory(category)}
+                                        >
                                             <FontAwesomeIcon className="text-[#ff6683] hover:text-pink-600" icon={faPen} />
                                         </button>
-                                        <button className="px-1 py-1 rounded flex items-center gap-1" onClick={() => handleDeleteCategory(category.id)}>
+                                        <button
+                                            className="px-1 py-1 rounded flex items-center gap-1"
+                                            onClick={() => handleDeleteCategory(category.id)}
+                                        >
                                             <FontAwesomeIcon className="text-red-500 hover:text-red-700" icon={faTrash} />
                                         </button>
                                     </td>
@@ -103,13 +140,13 @@ function ManageCategory() {
                 )}
             </div>
 
-            {/* Hiển thị modal thêm thể loại */}
             {isAdding && <AddCategory onClose={() => setIsAdding(false)} onSuccess={fetchCategories} />}
-
-            {/* Hiển thị modal chỉnh sửa thể loại */}
             {selectedCategory && (
-                <EditCategory category={selectedCategory} onClose={() => setSelectedCategory(null)} onSuccess={fetchCategories} />
-
+                <EditCategory
+                    category={selectedCategory}
+                    onClose={() => setSelectedCategory(null)}
+                    onSuccess={fetchCategories}
+                />
             )}
         </>
     );

@@ -32,7 +32,7 @@ function ManageUser() {
     return (
         <>
             <Sidebar />
-            <div className="p-6 sm:ml-60 overflow-x-auto min-h-screen mt-24 bg-gray-100">
+            <div className="p-6 sm:ml-60 overflow-x-auto min-h-screen mt-20 bg-gray-100">
                 <h2 className="text-2xl font-bold text-[#ff6683] mb-6">Quản lý Người Dùng</h2>
 
                 {loading ? (

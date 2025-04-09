@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "../../../components/SideBar/Sidebar";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
 import AddValueAttribute from "./AddValueAttributes/AddValueAttributes";
 import EditValueAttribute from "./EditValueAttributes/EditValueAttributes";
 import { getAccessTokenFromLS } from "../../../utils/auth";
@@ -10,14 +10,39 @@ import attributeValueApi from "../../../api/AdminApi/AttributeValueApi/Attribute
 
 function ManageValueAttributes() {
     const [valueAttributes, setValueAttributes] = useState([]);
+    const [filteredAttributes, setFilteredAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [selectedAttribute, setSelectedAttribute] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const access_token = getAccessTokenFromLS();
 
     useEffect(() => {
         fetchValueAttributes();
     }, []);
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            if (searchTerm.trim() === "") {
+                setFilteredAttributes(valueAttributes);
+            } else {
+                try {
+                    const response = await attributeValueApi.searchAttributeValues(searchTerm);
+                    if (response.status === 200 && response.data?.data) {
+                        setFilteredAttributes(response.data.data);
+                    } else {
+                        setFilteredAttributes([]);
+                    }
+                } catch (error) {
+                    console.error("❌ Lỗi khi tìm kiếm giá trị thuộc tính:", error);
+                    setFilteredAttributes([]);
+                }
+            }
+        };
+
+        fetchSearchResults();
+    }, [searchTerm]);
+
 
     const fetchValueAttributes = async () => {
         setLoading(true);
@@ -27,13 +52,16 @@ function ManageValueAttributes() {
 
             if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
                 setValueAttributes(response.data.data);
+                setFilteredAttributes(response.data.data);
             } else {
                 setValueAttributes([]);
+                setFilteredAttributes([]);
             }
         } catch (error) {
             console.error("❌ Lỗi API:", error);
             Swal.fire("Lỗi!", "Không thể tải danh sách giá trị thuộc tính", "error");
             setValueAttributes([]);
+            setFilteredAttributes([]);
         }
         setLoading(false);
     };
@@ -59,10 +87,14 @@ function ManageValueAttributes() {
         });
     };
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     return (
         <>
             <Sidebar />
-            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-24">
+            <div className="p-4 sm:ml-60 overflow-x-auto min-h-screen mt-20">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-[#ff6683]">Quản lý Giá Trị Thuộc Tính</h2>
                     <button className="bg-[#ff6683] text-white px-4 py-2 rounded-md font-bold hover:bg-[#d8576d] transition" onClick={() => setIsAdding(true)}>
@@ -70,10 +102,40 @@ function ManageValueAttributes() {
                     </button>
                 </div>
 
+                {/* Phần tìm kiếm */}
+                <div className="mb-4 relative">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            className=" px-2 py-1 w-1/3 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6683] focus:border-[#ff6683]"
+                            placeholder="Tìm kiếm giá trị thuộc tính..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <FontAwesomeIcon icon={faSearch} />
+                        </div>
+                    </div>
+                    {searchTerm && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <button
+                                className="text-gray-400 hover:text-gray-600"
+                                onClick={() => setSearchTerm("")}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    )}
+                </div>
+
                 {loading ? (
                     <p className="text-center text-gray-500">Đang tải danh sách...</p>
-                ) : valueAttributes.length === 0 ? (
-                    <p className="text-center text-gray-500">Không có giá trị thuộc tính nào.</p>
+                ) : filteredAttributes.length === 0 ? (
+                    searchTerm ? (
+                        <p className="text-center text-gray-500">Không tìm thấy kết quả phù hợp với "{searchTerm}".</p>
+                    ) : (
+                        <p className="text-center text-gray-500">Không có giá trị thuộc tính nào.</p>
+                    )
                 ) : (
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead>
@@ -86,7 +148,7 @@ function ManageValueAttributes() {
                             </tr>
                         </thead>
                         <tbody>
-                            {valueAttributes.map((attribute, index) => (
+                            {filteredAttributes.map((attribute, index) => (
                                 <tr key={attribute.id} className="text-center border">
                                     <td className="py-2 px-4">{index + 1}</td>
                                     <td className="py-2 px-4">{attribute.attribute_type_id}</td>

@@ -327,7 +327,8 @@ function EditProduct({ onClose, onSuccess, productId }) {
             });
 
             // Use FormData with the API call
-            await productApi.updateProduct(access_token, productId, formData);
+            const response = await productApi.updateProduct(access_token, productId, formData);
+            console.log(response)
             Swal.fire("Thành công!", "Sản phẩm đã được cập nhật.", "success");
             onSuccess();
             onClose();

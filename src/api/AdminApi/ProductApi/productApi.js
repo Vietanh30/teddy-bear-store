@@ -3,6 +3,7 @@ import { http } from "../../../constants/config";
 export const URL_PRODUCT = "products";
 export const URL_ADMIN_PRODUCT = "admin/product";
 export const URL_ADMIN_PRODUCTS = "admin/products";
+export const URL_PRODUCT_BY_CATEGORY = "products/category/slug"; // Sửa thành URL base, sẽ thêm /{slugCategory} sau
 
 const productApi = {
   // 🔹 Tạo sản phẩm
@@ -23,6 +24,9 @@ const productApi = {
   // 🔹 Lấy sản phẩm theo ID
   getProductById: function (idProduct) {
     return http.get(`${URL_PRODUCT}/${idProduct}`);
+  },
+  getProductByCategory: function (slugCategory) {
+    return http.get(`${URL_PRODUCT_BY_CATEGORY}/${slugCategory}`);
   },
 
   // 🔹 Cập nhật sản phẩm

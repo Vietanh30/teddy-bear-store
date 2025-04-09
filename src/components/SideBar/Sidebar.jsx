@@ -90,7 +90,7 @@ function Sidebar() {
                         <li className="group">
                             <Link to={path.manageUsers} className={`flex items-center p-2 rounded-lg font-semibold text-sm group ${isActive(path.manageUsers) ? "bg-[#ff6683] text-white" : "text-[#ff6683] hover:bg-[#ff6683] hover:text-white"}`}>
                                 <FontAwesomeIcon icon={faUser} className="mr-2 group-hover:text-white" />
-                                <span className="ms-3">Quản lý người dùng</span>
+                                <span className="ms-3">Quản lý khách hàng</span>
                             </Link>
                         </li>
 
@@ -106,7 +106,7 @@ function Sidebar() {
                         <li className="group">
                             <Link to={path.manageInvoices} className={`flex items-center p-2 rounded-lg font-semibold text-sm group ${isActive(path.manageInvoices) ? "bg-[#ff6683] text-white" : "text-[#ff6683] hover:bg-[#ff6683] hover:text-white"}`}>
                                 <FontAwesomeIcon icon={faFileInvoiceDollar} className="mr-2 group-hover:text-white" />
-                                <span className="ms-3">Quản lý hóa đơn</span>
+                                <span className="ms-3">Quản lý đơn hàng</span>
                             </Link>
                         </li>
 

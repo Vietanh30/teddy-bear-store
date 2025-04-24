@@ -16,12 +16,33 @@ const adminApi = {
       },
     });
   },
+  // Quản lý ng dùng
   getListUser: function (access_token) {
     return http.get(`${URL_MANAGE_USER}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
       },
+    });
+  },
+  createUser: function (data, token) {
+    return http.post(URL_MANAGE_USER, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  editUser: function (id, data, token) {
+    return http.put(`${URL_MANAGE_USER}/${id}`, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  deleteUser: function (id, token) {
+    return http.delete(`${URL_MANAGE_USER}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  searchUsers: function (keyword, token) {
+    return http.get(`${URL_MANAGE_USER}?search=${keyword}`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
   },
 

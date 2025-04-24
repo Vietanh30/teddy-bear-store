@@ -27,9 +27,8 @@ function Dashboard() {
         return <div className="text-center text-lg font-semibold mt-10">Đang tải dữ liệu...</div>;
     }
 
-    const { orders, invoices, variants, users } = dashboardData;
-
-    // Data cho BarChart đơn hàng
+    const { orders, invoices, variants, users, revenue } = dashboardData;
+    console.log("dashboardData", dashboardData)
     const orderChartData = {
         labels: ["Hoàn thành", "Đã hủy"],
         datasets: [
@@ -41,7 +40,6 @@ function Dashboard() {
         ],
     };
 
-    // Data cho BarChart variants
     const variantChartData = {
         labels: ["Tổng biến thể", "Hết hàng", "Còn hàng", "Đang giảm giá"],
         datasets: [
@@ -52,6 +50,18 @@ function Dashboard() {
             },
         ],
     };
+    function formatCurrency(value) {
+        if (!value) return '0 đ';
+
+        // Chuyển sang dạng số thực, làm tròn 0 chữ số thập phân nếu không có phần thập phân
+        return Number(value).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+    }
+
 
     return (
         <div className="flex">
@@ -59,15 +69,14 @@ function Dashboard() {
             <div className="p-4 sm:ml-60 w-full min-h-screen mt-20">
                 <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-                {/* Thống kê chính */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mb-6">
                     <div className="p-4 bg-blue-500 text-white rounded-lg shadow">
                         <h2 className="text-lg font-semibold">Tổng đơn hàng</h2>
                         <p className="text-xl">{orders.total}</p>
                     </div>
                     <div className="p-4 bg-green-500 text-white rounded-lg shadow">
                         <h2 className="text-lg font-semibold">Hóa đơn đã thanh toán</h2>
-                        <p className="text-xl">{invoices.total_paid}</p>
+                        <p className="text-xl">{formatCurrency(invoices.total_paid)}</p>
                     </div>
                     <div className="p-4 bg-pink-500 text-white rounded-lg shadow">
                         <h2 className="text-lg font-semibold">Tổng biến thể</h2>
@@ -77,9 +86,16 @@ function Dashboard() {
                         <h2 className="text-lg font-semibold">Người dùng</h2>
                         <p className="text-xl">{users.total}</p>
                     </div>
+                    <div className="p-4 bg-purple-500 text-white rounded-lg shadow">
+                        <h2 className="text-lg font-semibold">Doanh thu tháng</h2>
+                        <p className="text-xl">{formatCurrency(revenue.monthly)}</p>
+                    </div>
+                    <div className="p-4 bg-indigo-500 text-white rounded-lg shadow">
+                        <h2 className="text-lg font-semibold">Doanh thu tuần</h2>
+                        <p className="text-xl">{formatCurrency(revenue.weekly)}</p>
+                    </div>
                 </div>
 
-                {/* Biểu đồ */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-lg font-semibold mb-2">Thống kê đơn hàng</h2>

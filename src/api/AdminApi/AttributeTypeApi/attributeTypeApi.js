@@ -15,10 +15,24 @@ const attributeTypeApi = {
   },
 
   // 🔹 Lấy danh sách loại thuộc tính
-  getListAttributeTypes: function (searchTerm = "") {
+  // 🔹 Tìm kiếm loại thuộc tính theo từ khóa
+  searchAttributeTypes: function (searchTerm) {
     const params = searchTerm ? { search: searchTerm } : {};
     return http.get(URL_GET_ATTRIBUTE_TYPE, { params });
   },
+
+  // 🔹 Lấy danh sách loại thuộc tính (có truyền token)
+  getListAttributeTypes: function (access_token) {
+    return http.get(URL_GET_ATTRIBUTE_TYPE, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+
+
+
 
   // 🔹 Lấy loại thuộc tính theo ID
   getAttributeTypeById: function (idAttributeType) {

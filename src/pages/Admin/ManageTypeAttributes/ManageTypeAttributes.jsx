@@ -25,7 +25,13 @@ function ManageTypeAttributes() {
     const fetchTypeAttributes = async (term = "") => {
         setLoading(true);
         try {
-            const response = await attributeTypeApi.getListAttributeTypes(term);
+            let response;
+            if (term) {
+                response = await attributeTypeApi.searchAttributeTypes(term);
+            } else {
+                response = await attributeTypeApi.getListAttributeTypes(access_token);
+            }
+
             console.log("🚀 API Response:", response);
 
             if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
@@ -40,6 +46,7 @@ function ManageTypeAttributes() {
         }
         setLoading(false);
     };
+
 
     const handleSearchChange = (e) => {
         const value = e.target.value;

@@ -431,7 +431,7 @@ function ManageInvoices() {
                                         <p><strong>{item.variation?.product?.name || "Sản phẩm không xác định"}</strong></p>
                                         <p>SKU: {item.variation?.sku || "N/A"}</p>
                                         <p>Số lượng: {item.quantity}</p>
-                                        <p>Giá: {parseFloat(item.price).toLocaleString()}đ</p>
+                                        <p>Giá: forr</p>
 
                                         {/* Hiển thị danh sách thuộc tính */}
                                         {item.variation?.attributes && item.variation.attributes.length > 0 && (

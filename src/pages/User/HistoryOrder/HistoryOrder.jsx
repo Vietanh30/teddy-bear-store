@@ -10,6 +10,7 @@ import userApi from "../../../api/UserApi/userApi";
 import { baseUrl } from "../../../constants/config";
 import { getAccessTokenFromLS, setInvoinceNumberToLS, } from "../../../utils/auth";
 import Swal from "sweetalert2"; // Import SweetAlert2
+import { formatPrice } from "../../../utils/utils";
 
 function HistoryOrder() {
     const [orders, setOrders] = useState([]);
@@ -35,6 +36,7 @@ function HistoryOrder() {
                 }
 
                 const response = await userApi.getOrders(access_token);
+                console.log("response", response)
                 setOrders(response.data.orders || []);
             } catch (err) {
                 console.error("Failed to fetch orders:", err);
@@ -244,11 +246,11 @@ function HistoryOrder() {
                 <div className="text-center">
                     <div className="text-gray-500">Số lượng: {item.quantity}</div>
                     <div className="text-[#ff0000] font-bold">
-                        {parseFloat(item.price).toLocaleString()} đ
+                      {formatPrice(item.price)}
                     </div>
                     {item.discount_price && parseFloat(item.discount_price) > 0 && (
                         <div className="text-gray-500 line-through text-sm">
-                            {parseFloat(item.discount_price).toLocaleString()} đ
+                            {formatPrice(item.discount_price)}
                         </div>
                     )}
                 </div>

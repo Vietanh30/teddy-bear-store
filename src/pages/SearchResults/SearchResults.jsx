@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import path from '../../constants/path';
 import productApi from '../../api/AdminApi/ProductApi/productApi';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import Navbar from '../../components/Navbar/Navbar';
 
 function SearchResults() {
     const [products, setProducts] = useState([]);
@@ -12,6 +15,8 @@ function SearchResults() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const searchQuery = queryParams.get('q') || '';
+    const BASE_URL = "http://localhost:8000/storage/";
+
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -22,7 +27,6 @@ function SearchResults() {
                     page: 1,
                     limit: 20
                 });
-
                 if (response && response.data) {
                     setProducts(response.data);
                     setError(null);
@@ -52,6 +56,7 @@ function SearchResults() {
 
     // Get default or first variation image
     const getProductImage = (product) => {
+        console.log("product", product)
         // Try to get default variation image first
         const defaultVariation = product.variations.find(v => v.is_default === 1);
 
@@ -102,81 +107,86 @@ function SearchResults() {
     };
 
     return (
-        <div className="container mx-auto py-6 px-4">
-            <h1 className="text-2xl font-bold mb-6 text-[#02c4c1]">
-                {searchQuery ? `Kết quả tìm kiếm cho "${searchQuery}"` : 'Tìm kiếm sản phẩm'}
-            </h1>
+        <>
+            <Header />
+            <Navbar />
+            <div className="container mx-auto py-6 px-4">
+                <h1 className="text-2xl font-bold mb-6 text-[#02c4c1]">
+                    {searchQuery ? `Kết quả tìm kiếm cho "${searchQuery}"` : 'Tìm kiếm sản phẩm'}
+                </h1>
 
-            {loading ? (
-                <div className="text-center py-8">
-                    <p className="text-[#02c4c1] text-lg">Đang tìm kiếm sản phẩm...</p>
-                    <div className="mt-4 flex justify-center space-x-2">
-                        <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce"></div>
-                        <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                        <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                {loading ? (
+                    <div className="text-center py-8">
+                        <p className="text-[#02c4c1] text-lg">Đang tìm kiếm sản phẩm...</p>
+                        <div className="mt-4 flex justify-center space-x-2">
+                            <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce"></div>
+                            <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-3 h-3 bg-[#f48ea1] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                        </div>
                     </div>
-                </div>
-            ) : error ? (
-                <div className="text-center text-red-500 py-8">
-                    {error}
-                </div>
-            ) : products.length === 0 ? (
-                <div className="text-center py-8">
-                    <p className="text-gray-500">Không tìm thấy sản phẩm nào phù hợp với từ khóa "{searchQuery}".</p>
-                    <p className="mt-2">Vui lòng thử lại với từ khóa khác.</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {products.map(product => {
-                        const priceInfo = getBestPrice(product);
-                        const imageUrl = getProductImage(product);
+                ) : error ? (
+                    <div className="text-center text-red-500 py-8">
+                        {error}
+                    </div>
+                ) : products.length === 0 ? (
+                    <div className="text-center py-8">
+                        <p className="text-gray-500">Không tìm thấy sản phẩm nào phù hợp với từ khóa "{searchQuery}".</p>
+                        <p className="mt-2">Vui lòng thử lại với từ khóa khác.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {products.map(product => {
+                            const priceInfo = getBestPrice(product);
+                            const imageUrl = getProductImage(product);
 
-                        return (
-                            <div key={product.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                                <Link to={`${path.product}/${product.slug}`} className="block">
-                                    <div className="h-48 overflow-hidden">
-                                        <img
-                                            src={imageUrl}
-                                            alt={product.name}
-                                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                                        />
-                                    </div>
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-medium text-gray-800 mb-2 line-clamp-2 h-14">{product.name}</h3>
-                                        <div className="flex items-baseline gap-2">
-                                            {typeof priceInfo === 'object' ? (
-                                                <>
-                                                    <span className="text-[#f48ea1] font-bold">{formatPrice(priceInfo.best)}</span>
-                                                    {priceInfo.hasDiscount && (
-                                                        <span className="text-gray-500 text-sm line-through">{formatPrice(priceInfo.original)}</span>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <span className="text-[#f48ea1] font-bold">{formatPrice(priceInfo)}</span>
-                                            )}
+                            return (
+                                <div key={product.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                                    <Link to={`${path.product}/${product.slug}`} className="block">
+                                        <div className="h-48 overflow-hidden">
+                                            <img
+                                                src={`${BASE_URL}/${imageUrl}`}
+                                                alt={product.name}
+                                                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                            />
                                         </div>
-                                        <div className="mt-3 flex justify-between items-center">
-                                            <Link
-                                                to={`${path.product}/${product.slug}`}
-                                                className="text-sm text-[#02c4c1] hover:underline"
-                                            >
-                                                Xem chi tiết
-                                            </Link>
-                                            <button
-                                                className="p-2 rounded-full bg-[#f48ea1] text-white hover:bg-[#e47a90] transition-colors"
-                                                title="Thêm vào giỏ hàng"
-                                            >
-                                                <FontAwesomeIcon icon={faCartPlus} />
-                                            </button>
+                                        <div className="p-4">
+                                            <h3 className="text-lg font-medium text-gray-800 mb-2 line-clamp-2 h-14">{product.name}</h3>
+                                            <div className="flex items-baseline gap-2">
+                                                {typeof priceInfo === 'object' ? (
+                                                    <>
+                                                        <span className="text-[#f48ea1] font-bold">{formatPrice(priceInfo.best)}</span>
+                                                        {priceInfo.hasDiscount && (
+                                                            <span className="text-gray-500 text-sm line-through">{formatPrice(priceInfo.original)}</span>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <span className="text-[#f48ea1] font-bold">{formatPrice(priceInfo)}</span>
+                                                )}
+                                            </div>
+                                            <div className="mt-3 flex justify-between items-center">
+                                                <Link
+                                                    to={`${path.product}/${product.slug}`}
+                                                    className="text-sm text-[#02c4c1] hover:underline"
+                                                >
+                                                    Xem chi tiết
+                                                </Link>
+                                                <button
+                                                    className="p-2 rounded-full bg-[#f48ea1] text-white hover:bg-[#e47a90] transition-colors"
+                                                    title="Thêm vào giỏ hàng"
+                                                >
+                                                    <FontAwesomeIcon icon={faCartPlus} />
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
+                                    </Link>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+            <Footer />
+        </>
     );
 }
 

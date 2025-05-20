@@ -141,7 +141,7 @@ function SearchResults() {
 
                             return (
                                 <div key={product.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                                    <Link to={`${path.product}/${product.slug}`} className="block">
+                                    <Link to={`/products/${product.id}`} className="block">
                                         <div className="h-48 overflow-hidden">
                                             <img
                                                 src={`${BASE_URL}/${imageUrl}`}

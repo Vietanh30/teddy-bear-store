@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../../../components/Footer/Footer";
 import userApi from "../../../api/UserApi/userApi";
 import { baseUrl } from "../../../constants/config";
+import { formatPrice } from "../../../utils/utils";
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -30,6 +31,7 @@ function Cart() {
                 }
 
                 const response = await userApi.getCart(access_token);
+                console.log("response", response.data)
                 setCartItems(response.data || []);
             } catch (err) {
                 console.error("Failed to fetch cart items:", err);
@@ -114,7 +116,6 @@ function Cart() {
             variationId: variation.id
         };
     });
-    console.log(formattedCartItems)
     // Tính tổng tiền tạm tính
     const subtotal = formattedCartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -218,7 +219,7 @@ function Cart() {
                                                 {item.price.toLocaleString()} đ
                                                 {item.price < item.originalPrice && (
                                                     <div className="text-gray-500 line-through text-sm">
-                                                        {item.originalPrice.toLocaleString()} đ
+                                                        {formatPrice(item.originalPrice)}
                                                     </div>
                                                 )}
                                             </td>

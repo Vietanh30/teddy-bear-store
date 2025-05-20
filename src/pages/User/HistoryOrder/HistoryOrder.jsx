@@ -246,11 +246,11 @@ function HistoryOrder() {
                 <div className="text-center">
                     <div className="text-gray-500">Số lượng: {item.quantity}</div>
                     <div className="text-[#ff0000] font-bold">
-                      {formatPrice(item.price)}
+                        {formatPrice(parseFloat(item.discount_price).toLocaleString())}đ
                     </div>
                     {item.discount_price && parseFloat(item.discount_price) > 0 && (
                         <div className="text-gray-500 line-through text-sm">
-                            {formatPrice(item.discount_price)}
+                            {formatPrice(parseFloat(item.price).toLocaleString())}đ
                         </div>
                     )}
                 </div>

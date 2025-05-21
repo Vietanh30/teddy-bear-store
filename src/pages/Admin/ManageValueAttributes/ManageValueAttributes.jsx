@@ -151,7 +151,7 @@ function ManageValueAttributes() {
                             {filteredAttributes.map((attribute, index) => (
                                 <tr key={attribute.id} className="text-center border">
                                     <td className="py-2 px-4">{index + 1}</td>
-                                    <td className="py-2 px-4">{attribute.attribute_type_id}</td>
+                                    <td className="py-2 px-4">{attribute.attribute_type.display_name}</td>
                                     <td className="py-2 px-4">{attribute.value}</td>
                                     <td className="py-2 px-4">{attribute.display_value}</td>
                                     <td className="py-2 px-4 flex justify-center space-x-1">
